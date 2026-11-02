@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Прайс{% endblock %}
+
+{% block content %}
+<section class="main-section price-section">
+  <div class="container">
+    <h2>Прайс</h2>
+    {% include "studio/includes/price_cards.html" %}
+    <p class="price-cta">
+      <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться онлайн</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Страница не найдена{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container">
+    <h1 class="error-page__code">404</h1>
+    <h2 class="error-page__title">Кажется, вы немного заблудились...</h2>
+    <p class="error-page__text">
+      Страница, которую вы ищете, не существует,
+      но вы можете вернуться на главную страницу!
+    </p>
+    <a href="{% url 'studio:index' %}" class="button button--primary">На главную</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+/* Дополнения к стилям админки. */
+.admin-image-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 4px;
+}
+
+.admin-list-thumbnail {
+  display: block;
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.admin-video-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  border-radius: 4px;
+  background: #000;
+}

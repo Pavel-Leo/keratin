@@ -218,3 +218,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project
+*.py[cod]
+pip-wheel-metadata/
+*.py,cover
+config.py
+desktop.ini
+.python-version
+celerybeat-schedule
+.vscode/
+keratin/staticfiles/
+keratin/media/
+keratin/private_media/
+DEPLOY.md

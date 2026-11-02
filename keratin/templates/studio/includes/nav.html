@@ -1,0 +1,29 @@
+{% with page=request.resolver_match.url_name %}
+<nav class="main-nav-outer" id="main-nav">
+  <div class="container">
+    <a class="main-nav-outer__brand" href="{% url 'studio:index' %}">Keratin studio</a>
+    <ul class="main-nav" id="main-menu">
+      {% if page == "index" %}
+        {% if services %}<li><a href="#services">Процедуры</a></li>{% endif %}
+        {% if videos or photos %}<li><a href="#portfolio">Результаты</a></li>{% endif %}
+        {% if categories %}<li><a href="#prices">Цены</a></li>{% endif %}
+        <li><a href="#master">Мастер</a></li>
+        {% if questions %}<li><a href="#faq">Вопросы</a></li>{% endif %}
+        <li><a href="#contact">Контакты</a></li>
+      {% else %}
+        <li><a href="{% url 'studio:index' %}">Главная страница</a></li>
+        {% for item in menu_services %}
+          {% with url=item.get_absolute_url %}
+          <li><a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{{ item.menu_title }}</a></li>
+          {% endwith %}
+        {% endfor %}
+        <li><a href="{% url 'studio:articles' %}"{% if page == "articles" or page == "article" %} class="active"{% endif %}>Уход</a></li>
+        <li><a href="{% url 'studio:price' %}"{% if page == "price" %} class="active"{% endif %}>Прайс</a></li>
+        <li><a href="#contact">Контакты</a></li>
+      {% endif %}
+      <li class="main-nav__cta"><a href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться</a></li>
+    </ul>
+    <button class="res-nav_click" type="button" aria-label="Открыть меню" aria-controls="main-menu" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i></button>
+  </div>
+</nav>
+{% endwith %}

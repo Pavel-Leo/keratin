@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load text %}
+
+{% block title %}{{ article.title }}{% endblock %}
+{% block description %}{{ article.seo_description|default:article.teaser }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.seo_description|default:article.teaser }}{% endblock %}
+
+{% block content %}
+{% for section in article.sections.all %}
+<section class="main-section">
+  <div class="container">
+    {% if forloop.first %}
+      <h2>{{ article.title|plain }}</h2>
+      {% if article.subtitle %}
+        <p class="section-subtitle">{{ article.subtitle|plain }}</p>
+      {% endif %}
+    {% endif %}
+    <div class="row">
+      {% if not section.image %}
+        <div class="col-md-8 col-md-offset-2">
+      {% elif forloop.counter|divisibleby:2 %}
+        <div class="col-lg-7 col-sm-6 col-lg-push-5 col-sm-push-6 wow fadeInRight delay-02s">
+      {% else %}
+        <div class="col-lg-5 col-sm-6 wow fadeInLeft delay-05s">
+      {% endif %}
+        {% if section.heading %}
+          <h2 class="article-heading">{{ section.heading|plain }}</h2>
+        {% endif %}
+        <div class="rich-text rich-text--bullets">{{ section.body|rich }}</div>
+      </div>
+      {% if section.image %}
+        <figure class="{% if forloop.counter|divisibleby:2 %}col-lg-5 col-sm-6 col-lg-pull-7 col-sm-pull-6{% else %}col-lg-7 col-sm-6 text-right{% endif %} content-image wow fadeInUp delay-02s">
+          <img src="{{ section.image.url }}" alt="{{ section.image_alt }}" width="{{ section.image_width }}" height="{{ section.image_height }}" decoding="async"{% if not forloop.first %} loading="lazy"{% endif %}>
+        </figure>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% empty %}
+<section class="main-section">
+  <div class="container">
+    <h2>{{ article.title|plain }}</h2>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

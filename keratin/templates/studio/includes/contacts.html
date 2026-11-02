@@ -1,0 +1,52 @@
+{% load text %}
+<section class="main-section section--tint contact" id="contact">
+  <div class="container">
+    <h2>Контакты</h2>
+    <ul class="contact-cards">
+      {% if contacts.street or contacts.place %}
+      <li class="contact-card">
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        <h3>Адрес</h3>
+        <p>{% if contacts.place %}{{ contacts.place }}<br>{% endif %}{{ contacts.street }}{% if contacts.city %}, г. {{ contacts.city }}{% endif %}</p>
+      </li>
+      {% endif %}
+      {% if contacts.phone %}
+      <li class="contact-card">
+        <i class="fa fa-phone" aria-hidden="true"></i>
+        <h3>Телефон</h3>
+        <p><a href="tel:{{ contacts.phone }}">{{ contacts.phone|phone }}</a></p>
+      </li>
+      {% endif %}
+      {% if contacts.hours %}
+      <li class="contact-card">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <h3>Часы работы</h3>
+        <p>{{ contacts.hours|plain }}</p>
+      </li>
+      {% endif %}
+      {% if contacts.email %}
+      <li class="contact-card">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        <h3>Почта</h3>
+        <p><a href="mailto:{{ contacts.email }}">{{ contacts.email }}</a></p>
+      </li>
+      {% endif %}
+    </ul>
+    {% if contacts.map_url or contacts.phone or contacts.telegram_url %}
+    <p class="contact-actions">
+      {% if contacts.map_url %}<a class="button button--outline" href="{{ contacts.map_url }}" target="_blank" rel="noopener"><i class="fa fa-map-o" aria-hidden="true"></i>Как добраться</a>{% endif %}
+      {% if contacts.phone %}<a class="button button--outline" href="tel:{{ contacts.phone }}"><i class="fa fa-phone" aria-hidden="true"></i>Позвонить</a>{% endif %}
+      {% if contacts.telegram_url %}<a class="button button--outline" href="{{ contacts.telegram_url }}" target="_blank" rel="noopener"><i class="fa fa-telegram" aria-hidden="true"></i>Telegram</a>{% endif %}
+    </p>
+    {% endif %}
+    {% if contacts.social_links %}
+    <ul class="social-link">
+      {% for icon, title, url in contacts.social_links %}
+      <li class="{{ icon }}">
+        <a href="{{ url }}" target="_blank" rel="noopener" aria-label="{{ title }}"><i class="fa fa-{{ icon }}"></i></a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>

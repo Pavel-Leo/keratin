@@ -1,0 +1,12 @@
+# Файлы, которые выполняются или читаются на Linux-сервере,
+# всегда с переводом строки LF, даже при клонировании на Windows.
+*.sh text eol=lf
+*.conf text eol=lf
+*.yml text eol=lf
+Dockerfile text eol=lf
+.env.example text eol=lf
+
+*.mp4 binary
+*.jpg binary
+*.png binary
+*.webp binary

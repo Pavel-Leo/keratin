@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load text %}
+
+{% block title %}{{ service.seo_title|default:service.title }}{% endblock %}
+{% block description %}{{ service.seo_description|default:service.teaser }}{% endblock %}
+{% block og_title %}{{ service.title }}{% endblock %}
+{% block og_description %}{{ service.seo_description|default:service.teaser }}{% endblock %}
+
+{% block content %}
+<section class="main-section" id="service">
+  <div class="container">
+    <h2>{{ service.title|plain }}</h2>
+    {% if service.subtitle %}
+      <p class="section-subtitle">{{ service.subtitle|plain }}</p>
+    {% endif %}
+    <div class="row">
+      <div class="{% if service.image %}col-lg-5 col-sm-6{% else %}col-md-8 col-md-offset-2{% endif %} rich-text rich-text--checks wow fadeInLeft delay-05s">
+        {{ service.body|rich }}
+      </div>
+      {% if service.image %}
+        <figure class="col-lg-7 col-sm-6 text-right content-image wow fadeInUp delay-02s">
+          <img src="{{ service.image.url }}" alt="{{ service.image_alt }}" width="{{ service.image_width }}" height="{{ service.image_height }}" decoding="async">
+        </figure>
+      {% endif %}
+    </div>
+    <p class="prices__cta">
+      {% if service.price_from %}<span class="prices__cta-price">от {{ service.price_from|rub }}</span>{% endif %}
+      <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться</a>
+      <a class="button button--outline" href="{% url 'studio:price' %}">Все цены</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

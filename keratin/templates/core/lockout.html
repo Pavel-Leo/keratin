@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Вход временно заблокирован{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container">
+    <h1 class="error-page__title">Вход временно заблокирован</h1>
+    <p class="error-page__text">
+      Было слишком много неудачных попыток входа. Повторите попытку позже.
+    </p>
+    <a href="{% url 'studio:index' %}" class="button button--primary">На главную</a>
+  </div>
+</section>
+{% endblock %}

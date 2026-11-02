@@ -1,0 +1,42 @@
+[project]
+name = "keratin-studio"
+version = "2.0.0"
+description = "Сайт студии кератинового выпрямления волос"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 79
+target-version = "py312"
+src = ["keratin"]
+extend-exclude = ["keratin/*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ", "S", "SIM", "C4"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"keratin/tests/*" = ["S105", "S106"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "keratin", "studio"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "keratin.settings_test"
+pythonpath = ["keratin"]
+testpaths = ["keratin/tests"]
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["keratin"]
+omit = [
+    "*/migrations/*",
+    "keratin/keratin/wsgi.py",
+    "keratin/keratin/settings_test.py",
+    "keratin/manage.py",
+    "keratin/tests/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = true

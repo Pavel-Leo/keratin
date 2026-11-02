@@ -1,0 +1,18 @@
+<a class="booking-button" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>
+  <i class="fa fa-calendar" aria-hidden="true"></i>
+  <span>Онлайн-запись</span>
+</a>
+<div class="mobile-bar">
+  <a class="mobile-bar__book" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking><i class="fa fa-calendar" aria-hidden="true"></i>Записаться</a>
+  {% if contacts.phone %}<a class="mobile-bar__call" href="tel:{{ contacts.phone }}"><i class="fa fa-phone" aria-hidden="true"></i>Позвонить</a>{% endif %}
+</div>
+<div class="booking-modal" id="booking-modal" hidden>
+  <div class="booking-modal__overlay" data-booking-close></div>
+  <div class="booking-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+    <div class="booking-modal__header">
+      <span class="booking-modal__title" id="booking-modal-title">Онлайн-запись</span>
+      <button type="button" class="booking-modal__close" data-booking-close aria-label="Закрыть">&times;</button>
+    </div>
+    <iframe class="booking-modal__frame" title="Онлайн-запись" data-src="{{ booking_url }}"></iframe>
+  </div>
+</div>

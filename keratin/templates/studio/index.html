@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load static seo text %}
+
+{% block title %}Кератиновое выпрямление волос в Казани{% endblock %}
+{% block description %}Кератин, ботокс и нанопластика волос в Казани.{% if home.price_from %} Цены от {{ home.price_from|rub }}.{% endif %}{% if home.promo %} {{ home.promo|capfirst }}.{% endif %} Онлайн-запись.{% endblock %}
+{% block og_description %}Кератин, ботокс и нанопластика волос в Казани.{% if home.price_from %} Цены от {{ home.price_from|rub }}.{% endif %}{% if home.promo %} {{ home.promo|capfirst }}.{% endif %} Онлайн-запись.{% endblock %}
+
+{% block extra_head %}
+  <link rel="preload" href="{% static 'img/main1.webp' %}" as="image" fetchpriority="high">
+  {% business_json_ld %}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'vendor/fancybox/jquery.fancybox.min.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="hero" id="header">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <h1 class="hero__title">{{ home.hero_title|plain }}</h1>
+      {% if home.hero_subtitle %}<p class="hero__subtitle">{{ home.hero_subtitle|plain }}</p>{% endif %}
+      {% if home.price_from or home.promo %}
+      <p class="hero__offer">
+        {% if home.price_from %}<span class="hero__price">от {{ home.price_from|rub }}</span>{% endif %}
+        {% if home.promo %}<span class="promo-badge">{{ home.promo }}</span>{% endif %}
+      </p>
+      {% endif %}
+      <p class="hero__actions">
+        <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться онлайн</a>
+        {% if contacts.telegram_url %}
+        <a class="button button--light" href="{{ contacts.telegram_url }}" target="_blank" rel="noopener"><i class="fa fa-telegram" aria-hidden="true"></i>Написать в Telegram</a>
+        {% endif %}
+        {% if contacts.instagram_url %}
+        <a class="button button--light" href="{{ contacts.instagram_url }}" target="_blank" rel="noopener"><i class="fa fa-instagram" aria-hidden="true"></i>Написать в Instagram</a>
+        {% endif %}
+      </p>
+      <p class="hero__brand">{{ contacts.name }}</p>
+      {% if contacts.street %}
+      <p class="hero__place"><i class="fa fa-map-marker" aria-hidden="true"></i>{% if contacts.place %}{{ contacts.place }}, {% endif %}{{ contacts.street }}</p>
+      {% endif %}
+    </div>
+    <figure class="hero__photo">
+      <img src="{% static 'img/main1.webp' %}" width="450" height="580" fetchpriority="high" decoding="async" alt="Гладкие длинные волосы после процедуры">
+    </figure>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+{% if home.trust_items %}
+<section class="trust" aria-label="Почему выбирают студию">
+  <div class="container">
+    <ul class="trust__list">
+      {% for item in home.trust_items %}
+      {% cycle "certificate" "star" "leaf" "calendar-check-o" as icon silent %}
+      <li class="trust__item"><i class="fa fa-{{ icon }}" aria-hidden="true"></i><span>{{ item|plain }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% if videos or photos %}
+<section class="main-section" id="portfolio">
+  <div class="container">
+    <p class="section-label">Работы мастера</p>
+    <h2>Результаты</h2>
+    <p class="section-subtitle">Фото и видео на разных типах волос</p>
+    {% if photo_services|length > 1 %}
+    <div class="portfolio-filter" role="group" aria-label="Работы по услугам">
+      <button type="button" class="portfolio-filter__button" data-filter="" aria-pressed="true">Все</button>
+      {% for service in photo_services %}
+      <button type="button" class="portfolio-filter__button" data-filter="{{ service.slug }}" aria-pressed="false">{{ service.menu_title }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if videos %}
+    <ul class="video-strip">
+      {% for video in videos %}
+      <li class="video-card" data-service="{{ video.service.slug }}">
+        <a href="{{ video.video.url }}" class="video-card__link" data-fancybox="video"
+           data-width="{{ video.width }}" data-height="{{ video.height }}"
+           aria-label="Смотреть видео: {{ video.title }}">
+          <img src="{{ video.poster.url }}" width="{{ video.width }}" height="{{ video.height }}"
+               alt="" loading="lazy" decoding="async">
+        </a>
+        <p class="video-card__title">{{ video.title|plain }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if photos %}
+    <ul class="photo-grid">
+      {% for photo in photos %}
+      <li class="photo-card" data-service="{{ photo.service.slug }}">
+        <a href="{{ photo.image.url }}" class="photo-card__link" data-fancybox="photos">
+          <img src="{{ photo.thumbnail.url }}" width="{{ photo.thumbnail_width }}" height="{{ photo.thumbnail_height }}"
+               alt="{% firstof photo.image_alt photo.service.menu_title 'Работа мастера' %}" loading="lazy" decoding="async">
+        </a>
+        {% if photo.service %}<p class="photo-card__title">{{ photo.service.menu_title }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if services %}
+<section class="main-section" id="services">
+  <div class="container">
+    <p class="section-label">Гладкость, блеск, уход</p>
+    <h2>Процедуры</h2>
+    <ul class="service-cards">
+      {% for service in services %}
+      <li class="service-card">
+        <h3 class="service-card__title">{{ service.title|plain }}</h3>
+        {% if service.price_from %}<p class="service-card__price">от {{ service.price_from|rub }}</p>{% endif %}
+        <p class="service-card__text">{{ service.teaser|plain }}</p>
+        <p class="service-card__actions">
+          <a class="button button--primary button--small" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться</a>
+          <a class="button button--outline button--small" href="{% if service.has_page %}{{ service.get_absolute_url }}{% else %}#prices{% endif %}">Подробнее</a>
+        </p>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="services__more">
+      <a href="{% url 'studio:articles' %}">Как поддержать эффект и продлить действие процедур? Читайте полезные советы.</a>
+    </p>
+  </div>
+</section>
+{% endif %}
+
+<section class="main-section section--tint" id="choose">
+  <div class="container problems">
+    <figure class="problems__photo">
+      <img src="{% static 'img/hair_problems.webp' %}" width="591" height="880" loading="lazy" decoding="async" alt="Результат процедуры на прямых волосах">
+    </figure>
+    <div class="problems__text">
+      <h2>{{ home.problems_title|plain }}</h2>
+      {% if home.problems_intro %}<p class="problems__intro">{{ home.problems_intro|plain }}</p>{% endif %}
+      {% if home.problem_items %}
+      <ul class="check-list">
+        {% for item in home.problem_items %}<li>{{ item|plain }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      {% if contacts.telegram_url %}
+      <a class="button button--primary" href="{{ contacts.telegram_url }}" target="_blank" rel="noopener"><i class="fa fa-telegram" aria-hidden="true"></i>Получить консультацию в&nbsp;Telegram</a>
+      {% else %}
+      <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться на консультацию</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if categories %}
+<section class="main-section section--tint" id="prices">
+  <div class="container">
+    <p class="section-label">Стоимость по длине волос</p>
+    <h2>Цены</h2>
+    {% include "studio/includes/price_cards.html" %}
+    <p class="prices__cta">
+      {% if home.promo %}<span class="promo-badge promo-badge--large">{{ home.promo }}</span>{% endif %}
+      <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться</a>
+    </p>
+  </div>
+</section>
+{% endif %}
+
+<section class="main-section" id="master">
+  <div class="container master">
+    <figure class="master__photo">
+      {% if home.master_photo %}
+      <img src="{{ home.master_photo.url }}" width="{{ home.master_photo_width }}" height="{{ home.master_photo_height }}" loading="lazy" decoding="async" alt="Мастер {{ home.master_name }}">
+      {% else %}
+      <img src="{% static 'img/3-round.webp' %}" width="293" height="293" loading="lazy" decoding="async" alt="Мастер {{ home.master_name }}">
+      {% endif %}
+    </figure>
+    <div class="master__text">
+      <p class="master__label">Ваш мастер</p>
+      <h2 class="master__name">{{ home.master_name }}</h2>
+      {% if home.master_text %}<p class="master__about">{{ home.master_text|plain }}</p>{% endif %}
+      <p class="master__actions">
+        <a class="button button--primary" href="{{ booking_url }}" target="_blank" rel="noopener" data-booking>Записаться</a>
+        {% if contacts.telegram_url %}
+        <a class="button button--outline" href="{{ contacts.telegram_url }}" target="_blank" rel="noopener"><i class="fa fa-telegram" aria-hidden="true"></i>Написать в Telegram</a>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</section>
+
+{% if reviews %}
+<section class="main-section section--tint" id="reviews">
+  <div class="container">
+    <h2>Отзывы</h2>
+    <ul class="review-cards">
+      {% for review in reviews %}
+      <li class="review-card">
+        <blockquote class="review-card__text">{{ review.text|plain }}</blockquote>
+        <p class="review-card__author">{{ review.author }}{% if review.service %}<span>{{ review.service.menu_title }}</span>{% endif %}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% if questions %}
+<section class="main-section" id="faq">
+  <div class="container">
+    <h2>Частые вопросы</h2>
+    <div class="faq">
+      {% for item in questions %}
+      <details class="faq__item">
+        <summary class="faq__question">{{ item.question|plain }}</summary>
+        <div class="faq__answer rich-text">{{ item.answer|rich }}</div>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'js/portfolio.js' %}"></script>
+{% endblock %}

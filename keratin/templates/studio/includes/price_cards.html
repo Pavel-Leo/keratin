@@ -1,0 +1,20 @@
+{% load text %}
+<div class="card-grid price-grid">
+  {% for category in categories %}
+    <article class="price-card">
+      <h3 class="price-card__title">{{ category.title|plain }}</h3>
+      <ul class="price-list">
+        {% for item in category.items.all %}
+          <li class="price-list__item">
+            <span class="price-list__name">{{ item.name|plain }}</span>
+            <span class="price-list__dots" aria-hidden="true"></span>
+            <span class="price-list__value">{% if item.price_from %}от&nbsp;{% endif %}{{ item.price|rub }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      {% if category.note %}
+        <p class="price-card__note">{{ category.note|plain }}</p>
+      {% endif %}
+    </article>
+  {% endfor %}
+</div>
