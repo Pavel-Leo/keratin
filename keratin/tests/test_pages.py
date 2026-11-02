@@ -5,7 +5,6 @@ from django.utils import timezone
 PAGES = [
     ("/", "studio/index.html"),
     ("/services/keratin/", "studio/service_detail.html"),
-    ("/articles/", "studio/article_list.html"),
     ("/articles/care-tips/", "studio/article_detail.html"),
     ("/price/", "studio/price.html"),
 ]
@@ -26,8 +25,7 @@ def test_page_renders_with_base_layout(client, content, url, template):
     ("url", "active_url"),
     [
         ("/services/keratin/", "/services/keratin/"),
-        ("/articles/", "/articles/"),
-        ("/articles/care-tips/", "/articles/"),
+        ("/articles/care-tips/", "/articles/care-tips/"),
         ("/price/", "/price/"),
     ],
 )
@@ -44,6 +42,16 @@ def test_index_menu_uses_anchors(client, service):
     assert 'href="#services"' in content
     assert 'href="#contact"' in content
     assert 'class="active"' not in content
+
+
+def test_index_header_links_to_service_and_care(client, service):
+    html = client.get(reverse("studio:index")).content.decode()
+    nav = html.split("<nav ", 1)[1].split("</nav>", 1)[0]
+
+    assert '<details class="nav-dropdown">' in nav
+    assert f'href="{service.get_absolute_url()}"' in nav
+    assert 'href="/articles/care-tips/"' in nav
+    assert 'href="/articles/"' not in nav
 
 
 @pytest.mark.django_db

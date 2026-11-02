@@ -15,6 +15,7 @@
 	.main-section{ padding:70px 0;}
 	.main-nav li a{ margin:17px 9px; font-size:12px;}
 	.main-nav .main-nav__cta a{ margin-left:4px; padding:8px 14px;}
+	.nav-dropdown summary{ margin:17px 9px; font-size:12px;}
 	.hero__inner{ gap:32px;}
 	.hero__title{ font-size:34px;}
 	.hero__subtitle{ font-size:17px; line-height:26px;}
@@ -40,6 +41,10 @@
 	.main-nav-outer__brand:hover, .main-nav-outer__brand:focus{ color:#304b3e; text-decoration:none;}
 	.main-nav{ display:none; position:absolute; left:0; width:100%; top:100%; margin:0 auto; float: none; background:#fff; z-index: 99; border-top: 1px solid #eee;}
 	.main-nav li{ display:block;}
+	.main-nav{ max-height:calc(100dvh - 56px); overflow-y:auto;}
+	.nav-dropdown{ display:block;}
+	.nav-dropdown summary{ margin:4px 0; padding:12px 32px; border-bottom:1px solid #f3f3f3;}
+	.main-nav .nav-dropdown__list{ position:static; min-width:0; margin:0 32px 12px; border:0; background:#f5f3ed; box-shadow:none;}
 	.main-nav li a{ display:block; padding:12px 32px; margin: 4px 0; border-bottom: 1px solid #f3f3f3;}
 	.main-nav li a:hover{color:#304b3e}
 	.main-nav .main-nav__cta a{ margin:12px 32px; padding:12px 20px; border-bottom:0; text-align:center;}

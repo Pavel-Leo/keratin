@@ -6,7 +6,7 @@ from .models import Article, Service
 
 class PageSitemap(Sitemap):
     def items(self):
-        return ["studio:index", "studio:articles", "studio:price"]
+        return ["studio:index", "studio:price"]
 
     def location(self, item):
         return reverse(item)

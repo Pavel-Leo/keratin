@@ -4,11 +4,25 @@
     <a class="main-nav-outer__brand" href="{% url 'studio:index' %}">Keratin studio</a>
     <ul class="main-nav" id="main-menu">
       {% if page == "index" %}
-        {% if services %}<li><a href="#services">Процедуры</a></li>{% endif %}
+        {% if services %}
+        <li class="main-nav__procedures">
+          <details class="nav-dropdown">
+            <summary>Процедуры <i class="fa fa-angle-down" aria-hidden="true"></i></summary>
+            <ul class="nav-dropdown__list">
+              <li><a href="#services">Все процедуры</a></li>
+              {% for item in menu_services %}
+              <li><a href="{{ item.get_absolute_url }}">{{ item.menu_title }}</a></li>
+              {% endfor %}
+              <li><a href="{% url 'studio:article' slug='care-tips' %}">Уход за волосами</a></li>
+            </ul>
+          </details>
+        </li>
+        {% endif %}
         {% if videos or photos %}<li><a href="#portfolio">Результаты</a></li>{% endif %}
         {% if categories %}<li><a href="#prices">Цены</a></li>{% endif %}
         <li><a href="#master">Мастер</a></li>
         {% if questions %}<li><a href="#faq">Вопросы</a></li>{% endif %}
+        <li><a href="{% url 'studio:article' slug='care-tips' %}">Уход</a></li>
         <li><a href="#contact">Контакты</a></li>
       {% else %}
         <li><a href="{% url 'studio:index' %}">Главная страница</a></li>
@@ -17,7 +31,7 @@
           <li><a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{{ item.menu_title }}</a></li>
           {% endwith %}
         {% endfor %}
-        <li><a href="{% url 'studio:articles' %}"{% if page == "articles" or page == "article" %} class="active"{% endif %}>Уход</a></li>
+        <li><a href="{% url 'studio:article' slug='care-tips' %}"{% if page == "article" and article.slug == "care-tips" %} class="active"{% endif %}>Уход</a></li>
         <li><a href="{% url 'studio:price' %}"{% if page == "price" %} class="active"{% endif %}>Прайс</a></li>
         <li><a href="#contact">Контакты</a></li>
       {% endif %}

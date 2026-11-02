@@ -109,7 +109,6 @@ def test_pages_send_content_security_policy(client):
     [
         "/",
         "/services/keratin/",
-        "/articles/",
         "/articles/care-tips/",
         "/price/",
     ],

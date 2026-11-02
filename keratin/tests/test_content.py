@@ -81,10 +81,12 @@ def test_article_page_shows_sections(client, article):
     assert "Используйте термозащиту." in html
 
 
-def test_article_list_links_to_articles(client, article):
-    html = client.get(reverse("studio:articles")).content.decode()
+def test_article_list_redirects_directly_to_care(client, article):
+    response = client.get(reverse("studio:articles"))
 
-    assert f'href="{article.get_absolute_url()}"' in html
+    assert response.status_code == 301
+    assert response["Location"] == article.get_absolute_url()
+    assert client.get(response["Location"]).status_code == 200
 
 
 def test_price_page_formats_prices(client, price):
@@ -112,7 +114,7 @@ def test_price_page_hides_empty_and_unpublished_categories(client, price):
         ("/keratin_procedure/", "/services/keratin/"),
         ("/botox_procedure/", "/services/botox/"),
         ("/nano_plastic_procedure/", "/services/nanoplastic/"),
-        ("/care_tips/", "/articles/"),
+        ("/care_tips/", "/articles/care-tips/"),
     ],
 )
 def test_old_urls_redirect_permanently(client, old_url, new_url):

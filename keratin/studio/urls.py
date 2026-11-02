@@ -20,7 +20,11 @@ urlpatterns = [
         views.ServiceDetailView.as_view(),
         name="service",
     ),
-    path("articles/", views.ArticleListView.as_view(), name="articles"),
+    path(
+        "articles/",
+        moved_to("studio:article", slug="care-tips"),
+        name="articles",
+    ),
     path(
         "articles/<slug:slug>/",
         views.ArticleDetailView.as_view(),
@@ -41,5 +45,5 @@ urlpatterns = [
         "nano_plastic_procedure/",
         moved_to("studio:service", slug="nanoplastic"),
     ),
-    path("care_tips/", moved_to("studio:articles")),
+    path("care_tips/", moved_to("studio:article", slug="care-tips")),
 ]

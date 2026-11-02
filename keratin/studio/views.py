@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.urls import reverse
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, TemplateView
 
 from .models import (
     Article,
@@ -53,12 +53,6 @@ class ServiceDetailView(DetailView):
     queryset = Service.objects.with_page()
     template_name = "studio/service_detail.html"
     context_object_name = "service"
-
-
-class ArticleListView(ListView):
-    queryset = Article.objects.published().prefetch_related("sections")
-    template_name = "studio/article_list.html"
-    context_object_name = "articles"
 
 
 class ArticleDetailView(DetailView):

@@ -35,6 +35,7 @@ def test_sitemap_lists_only_published_pages(client, content):
     assert "/price/</loc>" in xml
     assert "/services/keratin/</loc>" in xml
     assert "/articles/care-tips/</loc>" in xml
+    assert "/articles/</loc>" not in xml
     assert "/articles/draft/" not in xml
 
 

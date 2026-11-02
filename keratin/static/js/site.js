@@ -1,6 +1,20 @@
 $(document).ready(function () {
   var $nav = $('#main-nav');
 
+  // Подменю закрывается после выбора ссылки, клика снаружи или Escape.
+  $(document).on('click', function (event) {
+    $('.nav-dropdown[open]').each(function () {
+      if (!this.contains(event.target) || $(event.target).closest('a').length) {
+        $(this).removeAttr('open');
+      }
+    });
+  });
+  $(document).on('keydown', function (event) {
+    if (event.key === 'Escape') {
+      $('.nav-dropdown[open]').removeAttr('open').find('summary').focus();
+    }
+  });
+
   $('.res-nav_click').on('click', function () {
     var expanded = $(this).attr('aria-expanded') === 'true';
     $(this).attr('aria-expanded', String(!expanded));
