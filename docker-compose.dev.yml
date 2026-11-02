@@ -1,0 +1,73 @@
+# Локальная разработка: docker compose -f docker-compose.dev.yml up --build
+name: keratin-dev
+
+x-app: &app
+  build:
+    context: .
+    target: worker
+  environment:
+    DEBUG: "True"
+    ALLOWED_HOSTS: localhost,127.0.0.1
+    POSTGRES_DB: keratin
+    POSTGRES_USER: keratin
+    POSTGRES_PASSWORD: local-development-only
+    POSTGRES_HOST: db
+    MEDIA_ROOT: /app/media
+    PRIVATE_MEDIA_ROOT: /app/private_media
+  volumes:
+    - ./keratin:/app
+    - media:/app/media
+    - private_media:/app/private_media
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: keratin
+      POSTGRES_USER: keratin
+      POSTGRES_PASSWORD: local-development-only
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keratin -d keratin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    <<: *app
+    command:
+      - sh
+      - -c
+      - >-
+        python manage.py migrate --noinput
+        && exec python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/healthz/', timeout=5)
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  worker:
+    <<: *app
+    command: ["python", "manage.py", "process_videos", "--watch"]
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:
+  private_media:

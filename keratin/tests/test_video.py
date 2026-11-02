@@ -141,7 +141,8 @@ def poster_png(path):
 
 
 @pytest.fixture
-def queued(db, tmp_path):
+def queued(transactional_db, tmp_path):
+    # Обработчик закрывает старые соединения: внешняя транзакция не нужна.
     source = tmp_path / "phone.mp4"
     source.write_bytes(b"fake video")
     with source.open("rb") as file:
@@ -236,7 +237,7 @@ def test_worker_restarts_interrupted_processing(queued, fake_convert, capsys):
     assert "Возвращено в очередь: 1" in capsys.readouterr().out
 
 
-def test_watch_mode_waits_for_new_videos(db, monkeypatch):
+def test_watch_mode_waits_for_new_videos(transactional_db, monkeypatch):
     class Stop(Exception):
         pass
 
@@ -328,12 +329,9 @@ def test_real_video_is_converted(tmp_path):
 def test_real_hdr_video_is_converted(tmp_path):
     source = make_clip(
         tmp_path / "iphone.mov",
-        "-color_primaries",
-        "bt2020",
-        "-color_trc",
-        "arib-std-b67",
-        "-colorspace",
-        "bt2020nc",
+        "-vf",
+        "format=yuv420p,setparams=color_primaries=bt2020:"
+        "color_trc=arib-std-b67:colorspace=bt2020nc",
     )
 
     assert probe(source).is_hdr
@@ -362,7 +360,7 @@ def test_playlist_disguised_as_video_is_rejected(tmp_path):
 
 
 @needs_ffmpeg
-def test_worker_processes_real_upload(db, tmp_path):
+def test_worker_processes_real_upload(transactional_db, tmp_path):
     source = make_clip(tmp_path / "phone.mp4")
     with source.open("rb") as file:
         video = PortfolioVideo.objects.create(

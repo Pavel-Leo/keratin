@@ -72,7 +72,77 @@ keratin/
 подвал и окно записи вынесены в `templates/studio/includes/`. Встроенных
 скриптов в шаблонах нет, весь JavaScript лежит в `static/js/`.
 
-## Локальный запуск
+## Локальный запуск через Docker
+
+Нужны Git и запущенный Docker с Compose v2 (на Windows и macOS:
+Docker Desktop в режиме Linux-контейнеров). Python и PostgreSQL
+на компьютер устанавливать не нужно. Команды подходят для PowerShell
+и Bash.
+
+### 1. Скачать проект
+
+```bash
+git clone https://github.com/Pavel-Leo/keratin.git
+cd keratin
+```
+
+Если проект уже скачан, откройте терминал в корне репозитория.
+
+### 2. Собрать и запустить
+
+```bash
+docker compose -f docker-compose.dev.yml up -d --build --wait
+```
+
+Локальные настройки уже заданы в `docker-compose.dev.yml`, создавать
+`.env` не нужно. Запускаются Django, PostgreSQL и обработчик роликов
+с ffmpeg. Миграции применяются автоматически.
+
+Сайт: http://127.0.0.1:8000/.
+
+### 3. Загрузить содержимое и создать администратора
+
+```bash
+docker compose -f docker-compose.dev.yml exec web python manage.py load_initial_content
+docker compose -f docker-compose.dev.yml exec web python manage.py createsuperuser
+```
+
+Админка: http://127.0.0.1:8000/admin/.
+`load_initial_content` можно запускать повторно: существующие записи
+сохраняются. Начальные ролики обрабатываются в фоне.
+
+### Работа с проектом
+
+Исходники подключены из папки `keratin/`: изменения Python автоматически
+перезапускают сервер разработки, изменения шаблонов и стилей видны
+после обновления страницы. После изменения кода обработчика роликов
+перезапустите его:
+
+```bash
+docker compose -f docker-compose.dev.yml restart worker
+```
+
+После изменения зависимостей повторите запуск с `--build`.
+После добавления миграций выполните:
+
+```bash
+docker compose -f docker-compose.dev.yml exec web python manage.py migrate
+```
+
+Журналы и остановка:
+
+```bash
+docker compose -f docker-compose.dev.yml logs -f web worker
+docker compose -f docker-compose.dev.yml down
+```
+
+База и загруженные файлы сохраняются в Docker volumes между запусками.
+Команда `down -v` удаляет эти данные. Локальный проект Compose называется
+`keratin-dev`, его тома отделены от серверного проекта `keratin`.
+
+Публикация на сервере описана отдельно в [DEPLOY.md](DEPLOY.md).
+
+## Локальный запуск без Docker
 
 Клонировать репозиторий и перейти в него:
 
@@ -143,14 +213,6 @@ DEBUG=True python manage.py process_videos --watch  # работать пост�
 Состояние каждого ролика видно в админке: «Ждёт обработки»,
 «Обрабатывается», «Готов» или «Ошибка» с причиной. Действие
 «Перекодировать заново» снова ставит выбранные ролики в очередь.
-
-## Запуск в Docker
-
-Продакшен-сборка описана в `docker-compose.yml`: nginx с HTTPS, Django
-за gunicorn, обработчик роликов с ffmpeg и PostgreSQL. Контейнеры
-работают не от root, с файловой системой только для чтения; наружу
-открыт только nginx. Скрипты выпуска сертификата и резервного копирования находятся
-в каталоге `deploy/`.
 
 ## Проверки
 

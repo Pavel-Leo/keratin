@@ -22,7 +22,7 @@ fail() { echo "$1" >&2; exit 1; }
 [[ $EUID -eq 0 ]] || fail "Запустите через sudo."
 command -v restic >/dev/null || fail "Нет restic: sudo apt install restic"
 [[ -s $RESTIC_PASSWORD_FILE ]] \
-    || fail "Нет файла с паролем $RESTIC_PASSWORD_FILE, см. DEPLOY.md."
+    || fail "Нет файла с паролем $RESTIC_PASSWORD_FILE, см. README.md."
 
 cd "$PROJECT_DIR"
 volume_path() {
